@@ -1,1 +1,1 @@
-# test.windows.com
+This repo is to puppet modules/manifests and packer configuration
