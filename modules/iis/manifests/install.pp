@@ -1,4 +1,4 @@
-define iis::install {
+class iis::install {
 	
 	exec { "import servermanager":
       command   => "import-module servermanager",
