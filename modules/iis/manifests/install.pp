@@ -7,7 +7,7 @@ class iis::install {
     }
 
     exec { "install iis":
-      command   => "add-windowsfeature web-server -includeallsubfeature",
+      command   => "add-windowsfeature web-server -includeallsubfeature;Start-Sleep -s 300",
       provider  => powershell,
       logoutput => true,
     }
