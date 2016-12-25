@@ -13,7 +13,7 @@ node "dev-test-com" {
     port          => '80',
     ip_address    => '*',
     host_header   => 'dev.test.com',
-    app_pool      => 'my_application_pool'
+    app_pool      => 'application_pool'
   }
 	
 }
