@@ -13,29 +13,32 @@ RSpec.describe 'iis_site' do
 
       # Setup a basic IIS pool and app running on port 8080
       pp = <<-IIS_SITE
+      include ::iis
 
-      class {'::iis':} ->
       windowsfeature { 'Web-Asp-Net45':
       } ->
       package {'chocolatey.server':
         ensure    => installed,
         provider  => chocolatey,
         source    => 'https://chocolatey.org/api/v2/',
-      }
-      ->
-      # application in iis
-      iis_pool { 'chocolatey.server':
-        ensure         => 'started',
-        enable_32_bit  => true,
-        runtime        => 'v4.0',
       } ->
-      iis_site {'chocolatey.server':
-        ensure        => 'started',
-        path          => 'C:\\tools\\chocolatey.server',
+      iis::manage_site {'Default Web Site':
+        ensure        => absent,
+        site_path     => 'any',
+        app_pool      => 'DefaultAppPool'
+      } ->
+      # application in iis
+      iis::manage_app_pool { 'chocolatey.server':
+        enable_32_bit           => true,
+        managed_runtime_version => 'v4.0',
+      } ->
+      iis::manage_site {'chocolatey.server':
+        site_path     => 'C:\\tools\\chocolatey.server',
         port          => '8080',
-        ip            => '*',
+        ip_address    => '*',
         app_pool      => 'chocolatey.server',
       } ->
+
       # lock down web directory
       acl { 'C:\\tools\\chocolatey.server':
         purge      => true,
@@ -63,16 +66,16 @@ RSpec.describe 'iis_site' do
     end
 
     describe iis_website('chocolatey.server') do
-      it { is_expected.to exist }
-      it { is_expected.to be_running }
-      it { is_expected.to be_in_app_pool('chocolatey.server') }
-      it { is_expected.to have_physical_path('C:/tools/chocolatey.server') }
+      it { should exist }
+      it { should be_running }
+      it { should be_in_app_pool('chocolatey.server') }
+      it { should have_physical_path('C:/tools/chocolatey.server') }
     end
 
     # Setup a basic IIS pool and app running on port 8080
     context 'chocolatey.server should be running on port 8080' do
       describe command('(New-Object Net.WebClient).DownloadString("http://127.0.0.1:8080")') do
-        its(:stdout) { is_expected.to match(%r{Simple Chocolatey Repository}) }
+        its(:stdout) { should match(/Simple Chocolatey Repository/) }
       end
     end
   end
