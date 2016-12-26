@@ -1,7 +1,7 @@
 class oracleclient {
 
 	exec { "Download JRE":
-      command   => "Invoke-WebRequest https://s3.amazonaws.com/testdemo4321/jdk1.8.0_111.zip -OutFile C:\\jdk1.8.0_111.zip;Start-Sleep -s 60",
+      command   => "Invoke-WebRequest https://s3.amazonaws.com/testdemo4321/jdk1.8.0_111.zip -OutFile C:\\jdk1.8.0_111.zip;Start-Sleep -s 300",
       provider  => powershell,
       creates 	=> "C:\\jdk1.8.0_111.zip",
       logoutput => true,
@@ -9,7 +9,7 @@ class oracleclient {
     }
 
     exec { "Install JRE":
-      command   => "Add-Type -assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory('C:\\jdk1.8.0_111.zip', 'C:\\jdk1.8.0_111')",
+      command   => "Add-Type -assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory('C:\\jdk1.8.0_111.zip', 'C:\\jdk1.8.0_111');Start-Sleep -s 120",
       provider  => powershell,
       creates 	=> "C:\\jdk1.8.0_111.zip",
       logoutput => true,
@@ -25,7 +25,7 @@ class oracleclient {
     }
 
     exec { "Extract the Oracle client":
-      command   => "Add-Type -assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory('C:\\win64_11gR2_client.zip', 'C:\\');Start-Sleep -s 300",
+      command   => "Add-Type -assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory('C:\\win64_11gR2_client.zip', 'C:\\');Start-Sleep -s 120",
       provider  => powershell,
       logoutput => true,
       creates 	=> "C:\\client",

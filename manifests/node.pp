@@ -2,9 +2,7 @@ node default {
   
   notify{ "This is COOL":}
 
-  class { "oracleclient": }
-
-  /*
+  /* class { "oracleclient": } */
 
   class { "iis::install": }
 
@@ -22,7 +20,7 @@ node default {
     host_header   => 'dev.test.com',
     app_pool      => 'application_pool',
     require       => Class['iis::install']
-  } */
+  } 
 	
 }
 
