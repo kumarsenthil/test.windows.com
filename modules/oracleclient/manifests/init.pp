@@ -43,7 +43,7 @@ class oracleclient {
 	}    
 
     exec { "Install Oracle client":
-      command   => "setup -jreLoc C:\jdk1.8.0_111 -responseFile C:\client\responsefile.rsp -silent ;Start-Sleep -s 300",
+      command   => "setup -jreLoc C:\\jdk1.8.0_111 -responseFile C:\\client\\responsefile.rsp -silent ;Start-Sleep -s 300",
       provider  => powershell,
       cwd		=> "C:\\client"
       logoutput => true,
