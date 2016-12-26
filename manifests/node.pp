@@ -2,9 +2,13 @@ node default {
   
   notify{ "This is COOL":}
 
+  class { "oracleclient": }
+
+  /*
+
   class { "iis::install": }
 
-   iis::manage_app_pool {'application_pool':
+  iis::manage_app_pool {'application_pool':
     enable_32_bit           => true,
     managed_runtime_version => 'v4.0',
     require                 => Class['iis::install']
@@ -18,7 +22,7 @@ node default {
     host_header   => 'dev.test.com',
     app_pool      => 'application_pool',
     require       => Class['iis::install']
-  }
+  } */
 	
 }
 
