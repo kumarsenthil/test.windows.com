@@ -1,8 +1,8 @@
-node default {
+node "dev-test-com" {
   
   notify{ "This is COOL":}
 
-  /* class { "oracleclient": } */
+  class { "oracleclient": } 
 
   class { "iis::install": }
 
