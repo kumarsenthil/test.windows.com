@@ -12,7 +12,7 @@ class oracleclient {
     exec { "Install JRE":
       command   => "Add-Type -assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory('C:\\jdk1.8.0_111.zip', 'C:\\jdk1.8.0_111');Start-Sleep -s 120",
       provider  => powershell,
-      creates 	=> "C:\\jdk1.8.0_111.zip",
+      creates 	=> "C:\\jdk1.8.0_111",
       logoutput => true,
       timeout   => 0,
       require	=> Exec["Download JRE"],
@@ -47,9 +47,9 @@ class oracleclient {
 	}    
 
     exec { "Install Oracle client":
-      command   => ".\setup.exe -jreLoc C:\\jdk1.8.0_111 -silent -nowelcome -nowait -responseFile C:\\client\\responsefile.rsp ;Start-Sleep -s 300",
+      command   => ".\\setup.exe -jreLoc C:\\jdk1.8.0_111 -silent -nowelcome -nowait -ignoreSysprereqs -ignorePrereq -responseFile C:\\client\\responsefile.rsp ;Start-Sleep -s 300",
       provider  => powershell,
-      cwd		=> "C:\\client",
+      cwd		    => "C:\\client",
       logoutput => true,
       timeout   => 0,
       require	=> File["deploy response file"],
