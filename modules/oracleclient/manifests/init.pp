@@ -5,6 +5,7 @@ class oracleclient {
       provider  => powershell,
       creates 	=> "C:\\jdk1.8.0_111.zip",
       logoutput => true,
+      timeout   => 0,
       before	=> Exec["Install JRE"],
     }
 
@@ -13,6 +14,7 @@ class oracleclient {
       provider  => powershell,
       creates 	=> "C:\\jdk1.8.0_111.zip",
       logoutput => true,
+      timeout   => 0,
       require	=> Exec["Download JRE"],
     }
 	
@@ -21,6 +23,7 @@ class oracleclient {
       provider  => powershell,
       creates 	=> "C:\\win64_11gR2_client.zip",
       logoutput => true,
+      timeout   => 0,
       require	=> Exec["Install JRE"],
     }
 
@@ -28,6 +31,7 @@ class oracleclient {
       command   => "Add-Type -assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory('C:\\win64_11gR2_client.zip', 'C:\\');Start-Sleep -s 120",
       provider  => powershell,
       logoutput => true,
+      timeout   => 0,
       creates 	=> "C:\\client",
       require	=> Exec["Download Oracle client"],
     }
@@ -47,6 +51,7 @@ class oracleclient {
       provider  => powershell,
       cwd		=> "C:\\client",
       logoutput => true,
+      timeout   => 0,
       creates 	=> "C:\\client",
       require	=> File["deploy response file"],
     }
