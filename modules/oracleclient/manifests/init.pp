@@ -52,7 +52,6 @@ class oracleclient {
       cwd		=> "C:\\client",
       logoutput => true,
       timeout   => 0,
-      creates 	=> "C:\\client",
       require	=> File["deploy response file"],
     }
 
