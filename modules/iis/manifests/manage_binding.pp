@@ -16,7 +16,7 @@ define iis::manage_binding($site_name, $protocol, $port, $host_header = '', $ip_
   if ($ensure in ['present','installed']) {
     $binding_require = $require_site ? {
       false   => undef,
-      default => Iis_site[$site_name],
+      default => Iis::Manage_site[$site_name],
     }
 
     exec { "CreateBinding-${title}":
@@ -34,13 +34,13 @@ define iis::manage_binding($site_name, $protocol, $port, $host_header = '', $ip_
       }
 
       file { "inspect-${title}-certificate.ps1":
-        ensure  => file,
+        ensure  => present,
         path    => "C:\\temp\\inspect-${name}.ps1",
         content => template('iis/inspect-certificate-binding.ps1.erb'),
       }
 
       file { "create-${title}-certificate.ps1":
-        ensure  => file,
+        ensure  => present,
         path    => "C:\\temp\\create-${name}.ps1",
         content => template('iis/create-certificate-binding.ps1.erb'),
       }
@@ -55,7 +55,7 @@ define iis::manage_binding($site_name, $protocol, $port, $host_header = '', $ip_
     }
   } else {
     exec { "DeleteBinding-${title}":
-    command   => "Import-Module WebAdministration; Remove-WebBinding -Name \"${site_name}\" -Port ${port} -Protocol \"${protocol}\" -HostHeader \"${host_header}\" -IPAddress \"${ip_address}\"",
+    command   => "Import-Module WebAdministration; Remove-WebBinding -Name \"${site_name}\" -Port ${port} -Protocol \"${protocol}\" -HostHeader \"${host_header}\" -IPAddress \"${ip_address}\" -SslFlags \"${ssl_flag}\"",
     onlyif    => "Import-Module WebAdministration; if (!(Get-WebBinding -Name \"${site_name}\" -Port ${port} -Protocol \"${protocol}\" -HostHeader \"${host_header}\" -IPAddress \"${ip_address}\" | Where-Object {\$_.bindingInformation -eq \"${ip_address}:${port}:${host_header}\"})) { exit 1 } else { exit 0 }",
     provider  => powershell,
     logoutput => true,

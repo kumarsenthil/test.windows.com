@@ -14,8 +14,7 @@ define iis::manage_app_pool (
   $apppool_max_queue_length         = undef,
   $apppool_recycle_periodic_minutes = undef,
   $apppool_recycle_schedule         = undef,
-  $apppool_recycle_logging          = undef,
-  $apppool_idle_timeout_action      = undef,
+  $apppool_recycle_logging          = undef
 ) {
 
   validate_bool($enable_32_bit)
@@ -158,17 +157,6 @@ define iis::manage_app_pool (
       logoutput => true,
     }
 
-    if $apppool_idle_timeout_action {
-      validate_re($apppool_idle_timeout_action, '^(Suspend|Terminate)$')
-      exec { "IdleTimeoutAction-${app_pool_name}":
-        command   => "Import-Module WebAdministration; Set-ItemProperty \"IIS:\\AppPools\\${app_pool_name}\" processmodel.idletimeoutaction ${apppool_idle_timeout_action}",
-        provider  => powershell,
-        onlyif    => "Import-Module WebAdministration; if((Get-ItemProperty \"IIS:\\AppPools\\${app_pool_name}\" processmodel.idletimeoutaction).CompareTo('${apppool_idle_timeout_action}') -eq 0) { exit 1 } else { exit 0 }",
-        require   => Exec["Create-${app_pool_name}"],
-        logoutput => true,
-      }
-    }
-
     exec { "RapidFailProtection-${app_pool_name}":
       command   => "Import-Module WebAdministration; Set-ItemProperty \"IIS:\\AppPools\\${app_pool_name}\" failure.rapidFailProtection ${rapid_fail_protection}",
       provider  => powershell,
@@ -221,7 +209,7 @@ define iis::manage_app_pool (
           command   => "Import-Module WebAdministration;\$iis = New-Object Microsoft.Web.Administration.ServerManager;iis:;\$pool = get-item IIS:\\AppPools\\${app_pool_name};\$pool.processModel.username = \"${apppool_username}\";\$pool.processModel.password = \"${apppool_userpw}\";\$pool.processModel.identityType = ${identityenum};\$pool | set-item;",
           provider  => powershell,
           unless    => "Import-Module WebAdministration;\$iis = New-Object Microsoft.Web.Administration.ServerManager;iis:;\$pool = get-item IIS:\\AppPools\\${app_pool_name};if(\$pool.processModel.identityType -ne \"${identitystring}\"){exit 1;}\
-if(\$pool.processModel.userName -ne \"${apppool_username}\"){exit 1;}if(\$pool.processModel.password -ne \"${apppool_userpw}\"){exit 1;}exit 0;",
+if(\$pool.processModel.userName -ne ${apppool_username}){exit 1;}if(\$pool.processModel.password -ne ${apppool_userpw}){exit 1;}exit 0;",
           require   => Exec["Create-${app_pool_name}"],
           logoutput => true,
         }
