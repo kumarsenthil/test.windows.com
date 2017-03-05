@@ -5,6 +5,5 @@ class deployment {
       provider  => powershell,
       logoutput => true,
       timeout   => 0,
-      before	=> Exec["Install JRE"],
     }
  }
