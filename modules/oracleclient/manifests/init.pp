@@ -44,7 +44,7 @@ class oracleclient {
 	    backup  => false,
 	    require	=> Exec["Extract the Oracle client"],
 	    before	=> Exec["Install Oracle client"],
-	}    
+	  }    
 
     exec { "Install Oracle client":
       command   => ".\\setup.exe -jreLoc C:\\jdk1.8.0_111 -silent -nowelcome -nowait -ignoreSysprereqs -ignorePrereq -responseFile C:\\client\\responsefile.rsp ;Start-Sleep -s 300",
